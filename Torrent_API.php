@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Torrent_API class.
+ * @author Chak10
+ * @since 04/2019
+ * @copyright © 2019 Chak10 
+ */
 
 class Torrent_API
 {
@@ -47,7 +53,7 @@ class Torrent_API
     const BASE_URL = "https://torrentapi.org/pubapi_v2.php";
 
     /**
-     * Rarbg_API constructor.
+     * Torrent_API constructor.
      * @param string $app_id
      */
     function __construct(string $app_id = 'generic')
