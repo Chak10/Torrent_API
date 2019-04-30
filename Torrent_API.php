@@ -4,13 +4,14 @@
  * Torrent_API class.
  * @author Chak10
  * @since 04/2019
- * @copyright © 2019 Chak10 
+ * @copyright Chak10
  */
 
 class Torrent_API
 {
+
     var $RES = False, $INFO = False, $ERROR = False,
-        $FILTER = array();
+        $FILTER = array(), $app_id = null, $token_file = null;
 
     private $last_request = 0;
 
@@ -52,21 +53,25 @@ class Torrent_API
 
     const BASE_URL = "https://torrentapi.org/pubapi_v2.php";
 
+
     /**
      * Torrent_API constructor.
      * @param string $app_id
+     * @param string $token_file
      */
-    function __construct(string $app_id = 'generic')
+    public function __construct(string $app_id = 'generic', string $token_file = "token")
     {
-        $req = self::curl_get(self::BASE_URL, [
-            'app_id' => $app_id,
-            'get_token' => 'get_token'
-        ]);
-        $TOKEN = json_decode($req);
-        if ($TOKEN) {
-            $this->FILTER ['token'] = $TOKEN->token;
-            $this->FILTER ['app_id'] = $app_id;
+        $this->app_id = $app_id;
+        $this->token_file = $token_file;
+        if (file_exists($token_file) && time() - filemtime($token_file) < 890) {
+            $TOKEN = json_decode(file_get_contents($token_file));
+            if ($TOKEN) {
+                $this->FILTER ['token'] = $TOKEN->token;
+                $this->FILTER ['app_id'] = $app_id;
+                return true;
+            }
         }
+        return $this->get_new_token();
     }
 
     /**
@@ -188,7 +193,6 @@ class Torrent_API
         return $this->FILTER ['ranked'] = "0";
     }
 
-
     /**
      * @return mixed
      */
@@ -214,6 +218,23 @@ class Torrent_API
     static public function get_sort()
     {
         return self::sort_list;
+    }
+
+    /**
+     *
+     */
+    private function get_new_token()
+    {
+        $req = self::curl_get(self::BASE_URL, [
+            'app_id' => $this->app_id,
+            'get_token' => 'get_token'
+        ]);
+        $TOKEN = json_decode($req);
+        if ($TOKEN) {
+            $this->FILTER ['token'] = $TOKEN->token;
+            $this->FILTER ['app_id'] = $this->app_id;
+            file_put_contents($this->token_file, $req);
+        }
     }
 
     /**
@@ -248,5 +269,3 @@ class Torrent_API
         return $result;
     }
 }
-
-?>
