@@ -1,7 +1,7 @@
 # Torrent_API
 
-> This php class need php version > 7.0 / curl with SSL
-
+> This php class need php version > 5.6* (Not tested) or 7 (Tested) / curl with SSL
+* Note: PHP 5.6 support stops at the end of 2018
 ## How use this class
 
     $torrent = new Torrent_API();  
