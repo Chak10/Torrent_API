@@ -61,7 +61,7 @@ class Torrent_API
      */
     public function __construct($app_id = null, $token_file = null)
     {
-        empty($app_id) && !is_string($app_id) ? $this->app_id = $app_id = 'chak10_torrent' : $this->app_id = $app_id;
+        empty($app_id) && !is_string($app_id) ? $this->app_id = $app_id = 'appid_torrent' : $this->app_id = $app_id;
         empty($token_file) && !is_string($token_file) ? $this->token_file = $token_file = "token" : $this->token_file = $token_file;
         $dirtoken = dirname($token_file);
         if (!empty($dirtoken) && !is_dir($dirtoken)) mkdir($dirtoken, 0764, true);
