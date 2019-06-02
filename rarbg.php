@@ -56,13 +56,15 @@ class Torrent_API
 
     /**
      * Torrent_API constructor.
-     * @param string $app_id
-     * @param string $token_file
+     * @param $app_id
+     * @param $token_file
      */
-    public function __construct(string $app_id = 'generic', string $token_file = "token")
+    public function __construct($app_id = null, $token_file = null)
     {
-        $this->app_id = $app_id;
-        $this->token_file = $token_file;
+        empty($app_id) && !is_string($app_id) ? $this->app_id = $app_id = 'chak10_torrent' : $this->app_id = $app_id;
+        empty($token_file) && !is_string($token_file) ? $this->token_file = $token_file = "token" : $this->token_file = $token_file;
+        $dirtoken = dirname($token_file);
+        if (!empty($dirtoken) && !is_dir($dirtoken)) mkdir($dirtoken, 0764, true);
         if (file_exists($token_file) && time() - filemtime($token_file) < 890) {
             $TOKEN = json_decode(file_get_contents($token_file));
             if ($TOKEN) {
